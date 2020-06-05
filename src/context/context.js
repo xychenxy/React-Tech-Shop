@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import {linkData} from "./linkData";
 import {socialData} from './socialData'
 import {items} from "./productData";
+import { client } from "./contentful";
+
 // 1. create context
 const ProductContext = React.createContext();
 
@@ -33,8 +35,19 @@ class ProductProvider extends Component{
 
     // request data and handle data
     componentDidMount() {
-        this.setProducts(items)
+        // using local data
+        // this.setProducts(items)
+
+
+        // using contentful data
+        client
+            .getEntries({
+                content_type:'techStore'
+            })
+            .then(response => this.setProducts(response.items))
+            .catch(console.error);
     }
+
 
     //set products
     setProducts = products => {
